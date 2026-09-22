@@ -145,6 +145,65 @@ canvas {
   text-transform: lowercase;
 }
 
+.intro-rotate-tip {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 1.2px;
+  color: var(--primary-gold);
+  opacity: 0.75;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Floating Rotate Hint in 3D Garden View (portrait only) */
+.rotate-hint {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: rgba(14, 12, 22, 0.75);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  border-radius: 20px;
+  color: #fff9e6;
+  font-size: 0.8rem;
+  letter-spacing: 0.8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 201, 60, 0.2);
+  pointer-events: none;
+  animation: hintFloat 3.5s ease-in-out infinite;
+}
+
+.hint-icon {
+  font-size: 1.15rem;
+  color: var(--primary-gold);
+  display: inline-block;
+  animation: hintSpin 4s ease-in-out infinite;
+}
+
+@keyframes hintSpin {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(90deg); }
+}
+
+@keyframes hintFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.85; }
+  50% { transform: translateX(-50%) translateY(-4px); opacity: 1; }
+}
+
+/* Automatically hide rotation hint when user is in landscape or on desktop */
+@media (orientation: landscape), (min-width: 900px) {
+  .rotate-hint, .intro-rotate-tip {
+    display: none !important;
+  }
+}
+
 @keyframes gentleFade {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }

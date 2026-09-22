@@ -38,20 +38,17 @@ export class WorldScene {
   }
 
   initRenderer() {
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
-
     this.renderer = new THREE.WebGLRenderer({
-      antialias: !isMobile,
+      antialias: true,
       powerPreference: 'high-performance',
-      precision: isMobile ? 'mediump' : 'highp'
+      precision: 'highp'
     });
 
-    // Clamp DPR: 1.5 on mobile to protect battery and sustain solid 60 FPS
-    const maxDpr = isMobile ? 1.5 : 2.0;
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr));
+    // Native crisp retina resolution (up to 2.0x DPR)
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
     this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.15;
+    this.renderer.toneMappingExposure = 1.2;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -112,10 +109,9 @@ export class WorldScene {
     const sunLight = new THREE.DirectionalLight(0xffb84d, 3.2);
     sunLight.position.set(7, 13, 8);
     sunLight.castShadow = true;
-    // 512 map size on mobile saves 70% shadow rendering cost
-    const shadowRes = isMobile ? 512 : 1024;
-    sunLight.shadow.mapSize.width = shadowRes;
-    sunLight.shadow.mapSize.height = shadowRes;
+    // 1024 high resolution shadow map
+    sunLight.shadow.mapSize.width = 1024;
+    sunLight.shadow.mapSize.height = 1024;
     sunLight.shadow.camera.near = 1;
     sunLight.shadow.camera.far = 28;
     sunLight.shadow.camera.left = -8;
@@ -176,21 +172,16 @@ export class WorldScene {
   }
 
   initPostProcessing() {
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
     const renderPass = new RenderPass(this.scene, this.camera);
 
-    // Half-resolution bloom: uses 1/4 GPU fillrate with identical dreamy soft glow
-    const bloomScale = isMobile ? 0.55 : 0.75;
-    const bloomRes = new THREE.Vector2(
-      Math.floor(window.innerWidth * bloomScale),
-      Math.floor(window.innerHeight * bloomScale)
-    );
+    // Full resolution dreamy cinematic bloom
+    const bloomRes = new THREE.Vector2(window.innerWidth, window.innerHeight);
 
     this.bloomPass = new UnrealBloomPass(
       bloomRes,
-      0.82, // strength
-      0.38, // radius
-      0.68  // threshold
+      0.88, // strength
+      0.42, // radius
+      0.65  // threshold
     );
 
     this.composer = new EffectComposer(this.renderer);
@@ -268,12 +259,7 @@ export class WorldScene {
       this.composer.setSize(width, height);
 
       if (this.bloomPass) {
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || width < 768;
-        const bloomScale = isMobile ? 0.55 : 0.75;
-        this.bloomPass.resolution.set(
-          Math.floor(width * bloomScale),
-          Math.floor(height * bloomScale)
-        );
+        this.bloomPass.resolution.set(width, height);
       }
     };
 
