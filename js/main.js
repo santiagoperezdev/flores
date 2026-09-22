@@ -1,5 +1,5 @@
-import { AudioManager } from './audio.js';
-import { WorldScene } from './scene.js';
+import { AudioManager } from './audio.js?v=2.0';
+import { WorldScene } from './scene.js?v=2.0';
 
 class App {
   constructor() {

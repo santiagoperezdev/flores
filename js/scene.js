@@ -3,9 +3,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { FlowerGarden } from './flowers.js';
-import { ParticleSystem } from './particles.js';
-import { GrassField } from './grass.js';
+import { FlowerGarden } from './flowers.js?v=2.0';
+import { ParticleSystem } from './particles.js?v=2.0';
+import { GrassField } from './grass.js?v=2.0';
 
 export class WorldScene {
   constructor(container, audioManager) {
